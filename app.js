@@ -88,6 +88,8 @@ const TRANSLATIONS = {
     "create-btn": "Criar Meu Brechó",
     "translation-prompt-text": "Prefere o catálogo em Inglês? Conheça nossa loja dos EUA.",
     "translation-prompt-btn": "Mudar para EUA 🇺🇸",
+    "illustration-badge": "Ilustração",
+    "showcase-only": "Apenas Mostruário",
     // JS strings
     "search-placeholder": "Pesquisar por peça, categoria ou brechó...",
     "sold": "Vendido",
@@ -168,6 +170,8 @@ const TRANSLATIONS = {
     "create-btn": "Create My Store",
     "translation-prompt-text": "Prefere em Português? Mude para o catálogo do Brasil.",
     "translation-prompt-btn": "Switch to Brazil 🇧🇷",
+    "illustration-badge": "Illustration",
+    "showcase-only": "Showcase Only",
     // JS strings
     "search-placeholder": "Search by piece, category or store...",
     "sold": "Sold",
@@ -192,6 +196,13 @@ const TRANSLATIONS = {
     "toast-loc-recommending": ". Recommending items from your area!"
   }
 };
+
+const MOCK_STORE_IDS = [
+  "11111111-1111-1111-1111-111111111111", // Cabide Vintage
+  "22222222-2222-2222-2222-222222222222", // Retrô Club
+  "33333333-3333-3333-3333-333333333333", // Garimpo do Sol
+  "44444444-4444-4444-4444-444444444444"  // Velho Casarão
+];
 
 const state = {
   cat: "all",
@@ -559,16 +570,35 @@ function render() {
 
     filtered.forEach(item => {
       const isSold = item.status === "vendido";
+      const isMock = MOCK_STORE_IDS.includes(item.store.id);
       const dict = TRANSLATIONS[state.country];
       const card = document.createElement("article");
       card.className = "product-card";
       card.style.opacity = isSold ? "0.6" : "1";
+
+      let buttonHtml = '';
+      if (isMock) {
+        buttonHtml = `
+          <button class="wa-button mock-button" disabled style="background-color:var(--color-border);color:var(--color-text-secondary);cursor:default;border-top:1px solid var(--color-border);" aria-label="Apenas Mostruário">
+            ${dict["showcase-only"]}
+          </button>
+        `;
+      } else {
+        buttonHtml = `
+          <button class="wa-button" data-id="${item.id}" ${isSold ? "disabled style='background-color:var(--color-border);color:var(--color-text-secondary);'" : ""} aria-label="Comprar ${item.name} no WhatsApp">
+            <svg class="btn-wa-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+            ${isSold ? dict["unavailable"] : dict["secure-wa"]}
+          </button>
+        `;
+      }
+
       card.innerHTML = `
         <div class="card-img-wrapper">
           <span class="card-badge">${isSold ? dict["sold"] : dict["unique-piece"]}</span>
           <img class="card-img" src="${item.img}" alt="${item.name}" loading="lazy">
         </div>
         <div class="card-info">
+          ${isMock ? `<span class="illustration-badge" data-translate="illustration-badge">${dict["illustration-badge"]}</span>` : ''}
           <span class="card-shop">${item.store.handle}</span>
           <h2 class="card-title">${item.name}</h2>
           <div class="card-meta-row">
@@ -576,16 +606,13 @@ function render() {
             <span class="card-price">${state.country === "BR" ? "R$ " : "$ "}${item.price}</span>
           </div>
         </div>
-        <button class="wa-button" data-id="${item.id}" ${isSold ? "disabled style='background-color:var(--color-border);color:var(--color-text-secondary);'" : ""} aria-label="Comprar ${item.name} no WhatsApp">
-          <svg class="btn-wa-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-          ${isSold ? dict["unavailable"] : dict["secure-wa"]}
-        </button>
+        ${buttonHtml}
       `;
 
       card.addEventListener("click", (e) => {
         if (e.target.closest(".wa-button")) {
           e.stopPropagation();
-          if (isSold) return;
+          if (isSold || isMock) return;
           const link = getWaLink(item);
           window.open(link, "_blank", "noopener,noreferrer");
           return;
@@ -601,11 +628,28 @@ function render() {
 function openDrawer(item) {
   const link = getWaLink(item);
   const isSold = item.status === "vendido";
+  const isMock = MOCK_STORE_IDS.includes(item.store.id);
   
   const dict = TRANSLATIONS[state.country];
   const isBR = state.country === "BR";
   const currency = isBR ? "R$" : "$";
   const stateLabelText = isBR ? (BR_STATES[item.state] || item.state) : (US_STATES[item.state] || item.state);
+
+  let ctaHtml = '';
+  if (isMock) {
+    ctaHtml = `
+      <button class="drawer-cta-btn" disabled style="background-color:var(--color-border);color:var(--color-text-secondary);pointer-events:none;cursor:default;border:none;box-shadow:none;">
+        ${dict["showcase-only"]}
+      </button>
+    `;
+  } else {
+    ctaHtml = `
+      <a href="${isSold ? '#' : link}" target="${isSold ? '_self' : '_blank'}" rel="noopener noreferrer" class="drawer-cta-btn" ${isSold ? "style='background-color:var(--color-border);color:var(--color-text-secondary);pointer-events:none;'" : ""}>
+        <svg class="btn-wa-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+        ${isSold ? dict["unavailable"] : dict["secure-wa"]}
+      </a>
+    `;
+  }
 
   drawerBody.innerHTML = `
     <div class="drawer-img-wrapper">
@@ -613,6 +657,7 @@ function openDrawer(item) {
       <img class="drawer-img" src="${item.img}" alt="${item.name}">
     </div>
     <div class="drawer-info">
+      ${isMock ? `<span class="illustration-badge" data-translate="illustration-badge">${dict["illustration-badge"]}</span>` : ''}
       <span class="drawer-shop">${item.store.handle}</span>
       <h1 class="drawer-title">${item.name}</h1>
       
@@ -642,10 +687,7 @@ function openDrawer(item) {
       <p class="drawer-desc-text">${item.desc || dict["drawer-no-desc"]}</p>
     </div>
     <div class="drawer-cta-wrapper">
-      <a href="${isSold ? '#' : link}" target="${isSold ? '_self' : '_blank'}" rel="noopener noreferrer" class="drawer-cta-btn" ${isSold ? "style='background-color:var(--color-border);color:var(--color-text-secondary);pointer-events:none;'" : ""}>
-        <svg class="btn-wa-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-        ${isSold ? dict["unavailable"] : dict["secure-wa"]}
-      </a>
+      ${ctaHtml}
     </div>
   `;
 
