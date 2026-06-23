@@ -294,9 +294,9 @@ function translatePage(lang) {
   // Document Title
   document.title = dict.title;
 
-  // Header Logo Region Badge
-  const logoRegion = document.getElementById("logo-region");
-  if (logoRegion) logoRegion.textContent = lang;
+  // Header Logo
+  const headerLogo = document.getElementById("header-logo");
+  if (headerLogo) headerLogo.textContent = dict.logo;
 
   // Search input placeholder
   const searchInput = document.getElementById("search-input");
