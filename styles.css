@@ -1776,18 +1776,29 @@ button {
   .header-container {
     flex-wrap: wrap;
     padding: 12px 16px;
-    gap: 12px;
+    gap: 8px;
   }
 
   .logo {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     order: 1;
   }
 
-  .cta-button {
-    padding: 8px 16px;
-    font-size: 0.75rem;
+  .header-actions {
     order: 2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cta-button {
+    padding: 8px 14px;
+    font-size: 0.75rem;
+  }
+
+  .country-trigger {
+    padding: 6px 10px !important;
+    font-size: 0.8rem !important;
   }
 
   .search-wrapper {
@@ -1818,15 +1829,24 @@ button {
   }
 
   .filters-container {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
   }
 
-  .shop-filter,
-  .state-filter,
   .cats-filter {
+    flex: 1 1 100%;
     width: 100%;
+    min-width: 0;
+  }
+
+  .state-filter,
+  .shop-filter {
+    flex: 1 1 calc(50% - 4px);
+    width: auto;
+    min-width: 0;
   }
 
   .shop-dropdown-menu,
