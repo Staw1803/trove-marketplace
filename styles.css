@@ -93,16 +93,33 @@ button {
 
 /* Logo */
 .logo {
-  font-family: var(--font-serif);
-  font-size: 1.8rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  color: var(--color-text-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
   transition: var(--transition-smooth);
 }
 
 .logo:hover {
   opacity: 0.8;
+}
+
+.logo-img {
+  height: 24px;
+  width: auto;
+  display: block;
+}
+
+.logo-region {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  padding: 1px 4px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background-color: rgba(15, 81, 50, 0.05);
 }
 
 /* Search Wrapper */
@@ -1780,8 +1797,16 @@ button {
   }
 
   .logo {
-    font-size: 1.4rem;
     order: 1;
+  }
+
+  .logo-img {
+    height: 18px;
+  }
+
+  .logo-region {
+    font-size: 0.65rem;
+    padding: 0px 3px;
   }
 
   .header-actions {
