@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trove | Painel do Vendedor</title>
+  <!-- Fonts: Playfair Display & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dashboard-body">
+
+  <!-- DASHBOARD HEADER -->
+  <header class="main-header">
+    <div class="header-container">
+      <a href="index.html" class="logo">TROVE</a>
+      
+      <div class="header-actions">
+        <a href="index.html" class="cta-button" style="background-color: transparent; color: var(--color-text-primary); border-color: var(--color-border);">
+          Ver Catálogo
+        </a>
+        <button class="logout-btn" id="header-logout-btn" style="border-radius: 40px; padding: 10px 20px;">
+          Sair
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- DASHBOARD MAIN -->
+  <main class="dashboard-main-container">
+    
+    <!-- TOP SHOP OVERVIEW -->
+    <div class="dash-shop-overview">
+      <div class="shop-profile-identity">
+        <div class="shop-logo-container" id="shop-logo-display">
+          <span id="shop-logo-letter">V</span>
+        </div>
+        <div class="shop-text-identity">
+          <span class="dash-shop-badge">Painel do Vendedor</span>
+          <h1 id="shop-name-title" class="shop-main-title">Carregando...</h1>
+          <span id="shop-handle-subtitle" class="shop-main-handle">@carregando</span>
+        </div>
+      </div>
+      <div class="shop-action-group">
+        <button class="share-link-btn" id="copy-shop-link-btn" style="display: flex; align-items: center; gap: 8px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+          Copiar Link do Acervo
+        </button>
+      </div>
+    </div>
+
+    <!-- RESPONSIVE GRID -->
+    <div class="dashboard-grid">
+      
+      <!-- LEFT COLUMN: SETTINGS & PUBLISHING -->
+      <div class="dashboard-column flex-col">
+        
+        <!-- CARD 1: CONFIGURAÇÕES DO BRECHÓ -->
+        <section class="dashboard-card">
+          <h2 class="card-section-heading">Configurações do Brechó</h2>
+          <p class="card-section-desc">Gerencie os dados visíveis e o contato do seu brechó no catálogo.</p>
+          
+          <form id="store-settings-form" class="dash-form">
+            
+            <!-- Logo Upload Group -->
+            <div class="form-group">
+              <label>Logotipo do Brechó</label>
+              <div class="logo-upload-wrapper">
+                <div class="logo-preview-box" id="logo-preview-box">
+                  <span id="logo-preview-placeholder">L</span>
+                </div>
+                <div class="upload-controls">
+                  <label for="logo-file-input" class="upload-file-label">Selecionar Imagem</label>
+                  <input type="file" id="logo-file-input" accept="image/*" style="display: none;">
+                  <span class="upload-tip">Quadrada recomendada. Máx 2MB</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="settings-name">Nome do Brechó</label>
+              <input type="text" id="settings-name" required placeholder="Ex: Vintage Club">
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="settings-handle">Identificador / Handle (@)</label>
+                <input type="text" id="settings-handle" required placeholder="Ex: @vintage_club">
+              </div>
+              <div class="form-group">
+                <label for="settings-phone">WhatsApp (DDD + Número)</label>
+                <input type="text" id="settings-phone" required placeholder="Ex: 5592981233982">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="settings-country">País do Brechó</label>
+              <select id="settings-country" required>
+                <option value="BR">Brasil (BR) 🇧🇷</option>
+                <option value="US">Estados Unidos (US) 🇺🇸</option>
+              </select>
+            </div>
+
+            <button type="submit" class="modal-cta-btn" id="save-settings-btn" style="margin-top: 8px;">
+              Salvar Alterações
+            </button>
+          </form>
+        </section>
+
+        <!-- CARD 2: ANUNCIAR / EDITAR PEÇA -->
+        <section class="dashboard-card" id="publisher-card">
+          <h2 class="card-section-heading" id="publisher-title">Anunciar Nova Peça</h2>
+          <p class="card-section-desc">Publique um desapego no catálogo carregando uma foto diretamente do seu celular ou computador.</p>
+          
+          <form id="product-publisher-form" class="dash-form">
+            <input type="hidden" id="publisher-item-id">
+            
+            <!-- Product Image Upload Group -->
+            <div class="form-group">
+              <label>Foto do Produto</label>
+              <div class="product-upload-wrapper" id="prod-dropzone">
+                <div class="prod-preview-box" id="prod-preview-box" style="display: none;">
+                  <img id="prod-preview-img" src="" alt="Preview do produto">
+                  <button type="button" class="remove-preview-btn" id="remove-prod-preview-btn" aria-label="Remover foto">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  </button>
+                </div>
+                <div class="upload-placeholder-content" id="prod-upload-prompt">
+                  <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                  <label for="prod-file-input" class="upload-file-label" style="margin-top: 8px;">Escolher Foto</label>
+                  <input type="file" id="prod-file-input" accept="image/*" style="display: none;" required>
+                  <p class="upload-tip">Proporção 3:4 recomendada</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="item-name">Nome da Peça</label>
+              <input type="text" id="item-name" required placeholder="Ex: Jaqueta Jeans Vintage 90s">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="item-price">Preço (R$)</label>
+                <input type="text" id="item-price" required placeholder="Ex: 89,90">
+              </div>
+              <div class="form-group">
+                <label for="item-size">Tamanho</label>
+                <input type="text" id="item-size" required placeholder="Ex: M, P, G, 40">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="item-state">Estado (Filtro Região)</label>
+                <select id="item-state" required>
+                  <option value="AM">Amazonas (AM)</option>
+                  <option value="SP">São Paulo (SP)</option>
+                  <option value="RJ">Rio de Janeiro (RJ)</option>
+                  <option value="PR">Paraná (PR)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="item-shipping">Tipo de Envio</label>
+                <select id="item-shipping" required>
+                  <option value="Nacional">Nacional</option>
+                  <option value="Nacional e Regional">Nacional e Regional</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Categorias (Selecione as que se aplicam)</label>
+              <div class="checkbox-group">
+                <label><input type="checkbox" name="item-cats" value="Feminino"> Feminino</label>
+                <label><input type="checkbox" name="item-cats" value="Masculino"> Masculino</label>
+                <label><input type="checkbox" name="item-cats" value="Vintage"> Vintage</label>
+                <label><input type="checkbox" name="item-cats" value="Streetwear"> Streetwear</label>
+                <label><input type="checkbox" name="item-cats" value="Calçados"> Calçados</label>
+                <label><input type="checkbox" name="item-cats" value="Acessórios"> Acessórios</label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="item-desc">Descrição / Estado de conservação</label>
+              <textarea id="item-desc" rows="3" required placeholder="Descreva os detalhes da peça, tecido, medidas ou avarias."></textarea>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 24px;">
+              <button type="button" class="logout-btn" id="cancel-edit-btn" style="display: none; border-color: var(--color-border); color: var(--color-text-secondary); border-radius: 40px; padding: 14px 24px; font-weight:600;">
+                Cancelar
+              </button>
+              <button type="submit" class="modal-cta-btn" id="publish-btn" style="flex:1;">
+                Publicar Peça
+              </button>
+            </div>
+          </form>
+        </section>
+
+      </div>
+
+      <!-- RIGHT COLUMN: ACTIVE INVENTORY -->
+      <div class="dashboard-column">
+        
+        <section class="dashboard-card inventory-main-card">
+          <h2 class="card-section-heading">Seu Acervo Publicado</h2>
+          <p class="card-section-desc" style="margin-bottom: 20px;">Estes são os produtos cadastrados atualmente. Peças marcadas como Vendidas não podem ser compradas, mas continuam visíveis no catálogo.</p>
+          
+          <div class="inventory-table-header">
+            <span>Produto</span>
+            <span>Status / Ações</span>
+          </div>
+          
+          <div class="dashboard-inventory-list" id="inventory-list-container">
+            <!-- Dynamically loaded seller products -->
+            <p style="text-align: center; color: var(--color-text-secondary); margin-top: 40px;">Carregando acervo...</p>
+          </div>
+        </section>
+
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="main-footer" style="margin-top: 80px;">
+    <div class="footer-container">
+      <p class="footer-brand">TROVE</p>
+      <p class="footer-text">TROVE &copy; 2026 - Central de Controle do Vendedor.</p>
+    </div>
+  </footer>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

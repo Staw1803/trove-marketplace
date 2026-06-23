@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trove | Curated Vintage & Second-Hand Fashion Marketplace</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Trove is a premium curated marketplace connecting you directly to local vintage thrift stores. Find unique fashion pieces and secure them via WhatsApp.">
+  <!-- Fonts: Playfair Display (Serif) & Inter (Sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- Supabase JS Client CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- FIXED HEADER -->
+  <header class="main-header">
+    <div class="header-container">
+      <!-- Logo -->
+      <a href="#" class="logo" id="header-logo">TROVE</a>
+
+      <!-- Search Bar -->
+      <div class="search-wrapper">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="search-input" placeholder="Pesquisar por peça, categoria ou brechó..." aria-label="Pesquisar produtos">
+        <button id="clear-search" class="clear-search-btn" aria-label="Limpar pesquisa" style="display: none;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <!-- Action Group -->
+      <div class="header-actions">
+        <!-- Country Switcher Dropdown -->
+        <div class="country-switcher" id="country-switcher" style="position: relative;">
+          <button class="country-trigger" id="country-trigger-btn" aria-haspopup="listbox" aria-expanded="false" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1px solid var(--color-border); border-radius: 40px; background-color: #FFFFFF; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: var(--transition-smooth);">
+            <span id="active-country-flag">🇧🇷</span>
+            <span id="active-country-label">BR</span>
+            <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="country-dropdown-menu" id="country-dropdown-menu" role="listbox" style="display: none; position: absolute; top: calc(100% + 8px); right: 0; width: 140px; background-color: #FFFFFF; border: 1px solid var(--color-border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); z-index: 1100; padding: 6px 0;">
+            <button class="country-opt selected" data-country="BR" style="width: 100%; padding: 10px 16px; text-align: left; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 500; cursor: pointer; border: none; background: none; transition: var(--transition-smooth);">
+              <span>🇧🇷</span> Brasil
+            </button>
+            <button class="country-opt" data-country="US" style="width: 100%; padding: 10px 16px; text-align: left; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 500; cursor: pointer; border: none; background: none; transition: var(--transition-smooth);">
+              <span>🇺🇸</span> USA
+            </button>
+          </div>
+        </div>
+
+        <!-- Merged: Single entry point button -->
+        <button class="cta-button" id="advertise-trigger">Anuncie sua loja</button>
+        <!-- Circular avatar profile menu (shown when logged in) -->
+        <button class="profile-avatar" id="profile-avatar-btn" style="display: none;" aria-label="Abrir central de controle">
+          <span id="profile-avatar-letter">V</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero-section">
+    <div class="hero-container">
+      <h1 class="hero-title">Tesouros curados dos melhores brechós locais.</h1>
+      <p class="hero-subtitle">Peças únicas de sua preferência</p>
+    </div>
+  </section>
+
+  <!-- DEDICATED SHOP DECORATOR BANNER -->
+  <div class="shop-banner" id="shop-banner" style="display: none;">
+    <div class="shop-banner-container">
+      <div class="shop-banner-details">
+        <div class="shop-banner-logo-wrapper" id="shop-banner-logo-wrapper" style="width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--color-border); overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background-color: var(--color-bg);"></div>
+        <div class="shop-banner-meta">
+          <span id="shop-banner-title">Navegando no acervo de Loja</span>
+          <span id="shop-banner-handle">@loja</span>
+        </div>
+      </div>
+      <button class="shop-banner-clear-btn" id="shop-banner-clear-btn">
+        Ver todas as lojas
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTROLS & FILTERS BAR -->
+  <section class="filters-section" id="filters-section">
+    <div class="filters-container">
+      <!-- Custom Category Filter Dropdown (3 Dots) -->
+      <div class="cats-filter" id="cats-filter">
+        <button class="cats-filter-trigger" id="cats-filter-btn" aria-haspopup="listbox" aria-expanded="false">
+          <svg class="dots-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1.5"></circle><circle cx="6" cy="12" r="1.5"></circle><circle cx="18" cy="12" r="1.5"></circle></svg>
+          <span id="active-cat-label">Todas as Categorias</span>
+        </button>
+        <div class="cats-dropdown-menu" id="cats-dropdown-menu" role="listbox">
+          <button class="cat-item selected" data-category="all">All Items</button>
+          <button class="cat-item" data-category="Feminino">Feminino</button>
+          <button class="cat-item" data-category="Masculino">Masculino</button>
+          <button class="cat-item" data-category="Vintage">Vintage</button>
+          <button class="cat-item" data-category="Streetwear">Streetwear</button>
+          <button class="cat-item" data-category="Calçados">Calçados</button>
+          <button class="cat-item" data-category="Acessórios">Acessórios</button>
+        </div>
+      </div>
+
+      <!-- Custom State Filter Dropdown -->
+      <div class="state-filter" id="state-filter">
+        <button class="state-filter-trigger" id="state-filter-btn" aria-haspopup="listbox" aria-expanded="false">
+          <svg class="map-pin-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          <span id="active-state-label">Todas as Regiões</span>
+          <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="state-dropdown-menu" id="state-dropdown-menu" role="listbox">
+          <button class="state-item selected" data-state="all">Todas as Regiões</button>
+          <button class="state-item" data-state="AM">Amazonas (AM)</button>
+          <button class="state-item" data-state="SP">São Paulo (SP)</button>
+          <button class="state-item" data-state="RJ">Rio de Janeiro (RJ)</button>
+          <button class="state-item" data-state="PR">Paraná (PR)</button>
+        </div>
+      </div>
+
+      <!-- Custom Shop Filter Dropdown -->
+      <div class="shop-filter" id="shop-filter">
+        <button class="shop-filter-trigger" id="shop-filter-btn" aria-haspopup="listbox" aria-expanded="false">
+          <svg class="shop-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          <span id="active-shop-label">Todas as Lojas</span>
+          <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="shop-dropdown-menu" id="shop-dropdown-menu" role="listbox">
+          <!-- Dynamically populated shop list -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCT GRID -->
+  <main class="products-section">
+    <div class="grid-container">
+      <div class="products-grid" id="products-grid">
+        <!-- Products will be dynamically populated here via JS -->
+      </div>
+      <!-- Empty State -->
+      <div class="empty-state" id="empty-state" style="display: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+        <h3>Nenhum desapego cadastrado nesta região ainda.</h3>
+        <p>Tente ajustar os filtros ou volte mais tarde para conferir as novidades.</p>
+        <button id="reset-filters-btn" class="reset-btn">Limpar Filtros</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="main-footer">
+    <div class="footer-container">
+      <p class="footer-brand">TROVE</p>
+      <p class="footer-text">TROVE &copy; 2026 - Connecting local circular fashion.</p>
+    </div>
+  </footer>
+
+  <!-- PRODUCT DETAIL DRAWER -->
+  <div class="drawer-overlay" id="detail-drawer" role="dialog" aria-hidden="true">
+    <div class="drawer-panel">
+      <div class="drawer-drag-bar"></div>
+      <button class="drawer-close" id="detail-close" aria-label="Fechar Detalhes">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      <div class="drawer-body" id="detail-body">
+        <!-- Populated via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- SELLER PORTAL MODAL (Authentication & Store Creation) -->
+  <div class="modal-overlay" id="seller-modal" role="dialog" aria-modal="true">
+    <div class="modal-card" id="seller-modal-card">
+      <button class="modal-close-btn" id="seller-modal-close" aria-label="Fechar Painel">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+
+      <!-- VIEW 1: Login Form (Entrar) -->
+      <div class="modal-content" id="seller-view-login">
+        <div class="modal-badge">Acesso Vendedor</div>
+        <h2 class="modal-heading">Entrar</h2>
+        
+        <form class="auth-form" id="login-form">
+          <div class="form-group">
+            <label for="login-email">E-mail</label>
+            <input type="email" id="login-email" required placeholder="seu@email.com">
+          </div>
+          <div class="form-group">
+            <label for="login-password">Senha</label>
+            <input type="password" id="login-password" required placeholder="Sua senha">
+          </div>
+          <button type="submit" class="modal-cta-btn" id="login-submit-btn">Entrar</button>
+        </form>
+
+        <p class="auth-toggle-text">
+          Não tem uma conta de vendedor? <a href="#" id="go-to-signup-btn">Cadastre-se</a>
+        </p>
+      </div>
+
+      <!-- VIEW 2: Register Form (Criar Conta) -->
+      <div class="modal-content" id="seller-view-signup" style="display: none;">
+        <div class="modal-badge accent">Novo Acervo</div>
+        <h2 class="modal-heading">Criar Conta Vendedor</h2>
+        
+        <form class="auth-form" id="signup-form">
+          <div class="form-group">
+            <label for="signup-email">E-mail</label>
+            <input type="email" id="signup-email" required placeholder="seu@email.com">
+          </div>
+          <div class="form-group">
+            <label for="signup-password">Senha</label>
+            <input type="password" id="signup-password" required placeholder="Mínimo 6 caracteres, maiúscula e número">
+            
+            <!-- Real-time Password Strength Meter -->
+            <div class="password-strength-container">
+              <div class="strength-bar" id="strength-bar"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+              <span class="strength-text" id="strength-text">Força: -</span>
+            </div>
+
+            <!-- Password Requirements Ticks -->
+            <ul class="password-criteria" id="password-criteria" style="margin-top: 10px; text-align: left; list-style: none; padding-left: 0;">
+              <li id="crit-length" class="criteria-item" style="font-size: 0.78rem; color: var(--color-text-secondary); display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                <span class="crit-icon" style="font-size: 0.85rem;">○</span> Mínimo de 6 caracteres
+              </li>
+              <li id="crit-upper" class="criteria-item" style="font-size: 0.78rem; color: var(--color-text-secondary); display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                <span class="crit-icon" style="font-size: 0.85rem;">○</span> Uma letra maiúscula
+              </li>
+              <li id="crit-number" class="criteria-item" style="font-size: 0.78rem; color: var(--color-text-secondary); display: flex; align-items: center; gap: 6px;">
+                <span class="crit-icon" style="font-size: 0.85rem;">○</span> Pelo menos um número
+              </li>
+            </ul>
+          </div>
+          <button type="submit" class="modal-cta-btn" id="signup-submit-btn">Registrar Conta</button>
+        </form>
+
+        <p class="auth-toggle-text">
+          Já possui um cadastro? <a href="#" id="go-to-login-btn">Entrar</a>
+        </p>
+      </div>
+
+      <!-- VIEW 3: Email Confirmation Required (Elaborated) -->
+      <div class="modal-content" id="seller-view-email-confirm" style="display: none;">
+        <div class="modal-badge accent">Confirmação</div>
+        <h2 class="modal-heading">Verifique seu E-mail</h2>
+        
+        <div class="confirm-email-art" style="margin: 20px 0;">
+          <svg class="mail-icon" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-primary); animation: float 3s ease-in-out infinite;">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </div>
+        
+        <p class="modal-description" style="margin-top:10px; margin-bottom: 20px; font-size: 0.92rem;">
+          Enviamos um link de confirmação para o endereço:<br><strong id="confirm-email-address" style="color: var(--color-primary); word-break: break-all;">seu@email.com</strong>.<br>Acesse sua caixa de entrada para ativar sua conta de vendedor.
+        </p>
+
+        <!-- Quick email provider links -->
+        <div class="email-providers-row" style="display: flex; gap: 10px; width: 100%; margin-bottom: 16px;">
+          <a href="https://mail.google.com" target="_blank" rel="noopener noreferrer" class="provider-btn gmail-btn" style="flex: 1; padding: 10px; border: 1px solid var(--color-border); border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-align: center; background-color: #FFFFFF; display: inline-block;">Abrir Gmail</a>
+          <a href="https://outlook.live.com" target="_blank" rel="noopener noreferrer" class="provider-btn outlook-btn" style="flex: 1; padding: 10px; border: 1px solid var(--color-border); border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-align: center; background-color: #FFFFFF; display: inline-block;">Abrir Outlook</a>
+        </div>
+        
+        <button class="modal-cta-btn" id="resend-email-btn" disabled style="background-color: var(--color-border); color: var(--color-text-secondary); box-shadow: none; margin-bottom: 12px;">
+          Reenviar e-mail (<span id="resend-countdown">60</span>s)
+        </button>
+
+        <button class="text-link-btn" id="email-confirm-ok-btn" style="background: none; border: none; font-size: 0.85rem; color: var(--color-text-secondary); text-decoration: underline; margin-top: 8px;">
+          Voltar para o Início
+        </button>
+      </div>
+
+      <!-- VIEW 4: Create Store Profile -->
+      <div class="modal-content" id="seller-view-create-store" style="display: none;">
+        <div class="modal-badge">Nova Loja</div>
+        <h2 class="modal-heading">Cadastre seu Brechó</h2>
+        <p class="modal-description">Insira os dados do seu acervo para começar a publicar.</p>
+        
+        <form class="auth-form" id="create-store-form">
+          <div class="form-group">
+            <label for="store-name">Nome do Brechó</label>
+            <input type="text" id="store-name" required placeholder="Ex: Vintage Club">
+          </div>
+          <div class="form-group">
+            <label for="store-handle">Identificador/Handle (@)</label>
+            <input type="text" id="store-handle" required placeholder="Ex: @vintage_club">
+          </div>
+          <div class="form-group">
+            <label for="store-phone">WhatsApp para Vendas (DDD + Número)</label>
+            <input type="text" id="store-phone" required placeholder="Ex: 5592981233982">
+          </div>
+          <div class="form-group">
+            <label for="store-country">País do Brechó</label>
+            <select id="store-country" required>
+              <option value="BR">Brasil (BR) 🇧🇷</option>
+              <option value="US">Estados Unidos (US) 🇺🇸</option>
+            </select>
+          </div>
+          <button type="submit" class="modal-cta-btn">Criar Meu Brechó</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>
