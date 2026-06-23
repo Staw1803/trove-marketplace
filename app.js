@@ -6,6 +6,193 @@ const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let ITEMS = [];
 let STORES_LIST = [];
 
+const BR_STATES = {
+  "AC": "Acre", "AL": "Alagoas", "AP": "Amapá", "AM": "Amazonas",
+  "BA": "Bahia", "CE": "Ceará", "DF": "Distrito Federal", "ES": "Espírito Santo",
+  "GO": "Goiás", "MA": "Maranhão", "MT": "Mato Grosso", "MS": "Mato Grosso do Sul",
+  "MG": "Minas Gerais", "PA": "Pará", "PB": "Paraíba", "PR": "Paraná",
+  "PE": "Pernambuco", "PI": "Piauí", "RJ": "Rio de Janeiro", "RN": "Rio Grande do Norte",
+  "RS": "Rio Grande do Sul", "RO": "Rondônia", "RR": "Roraima", "SC": "Santa Catarina",
+  "SP": "São Paulo", "SE": "Sergipe", "TO": "Tocantins"
+};
+
+const US_STATES = {
+  "AL": "Alabama", "AK": "Alaska", "AZ": "Arizona", "AR": "Arkansas", "CA": "California",
+  "CO": "Colorado", "CT": "Connecticut", "DE": "Delaware", "FL": "Florida", "GA": "Georgia",
+  "HI": "Hawaii", "ID": "Idaho", "IL": "Illinois", "IN": "Indiana", "IA": "Iowa",
+  "KS": "Kansas", "KY": "Kentucky", "LA": "Louisiana", "ME": "Maine", "MD": "Maryland",
+  "MA": "Massachusetts", "MI": "Michigan", "MN": "Minnesota", "MS": "Mississippi",
+  "MO": "Missouri", "MT": "Montana", "NE": "Nebraska", "NV": "Nevada", "NH": "New Hampshire",
+  "NJ": "New Jersey", "NM": "New Mexico", "NY": "New York", "NC": "North Carolina",
+  "ND": "North Dakota", "OH": "Ohio", "OK": "Oklahoma", "OR": "Oregon", "PA": "Pennsylvania",
+  "RI": "Rhode Island", "SC": "South Carolina", "SD": "South Dakota", "TN": "Tennessee",
+  "TX": "Texas", "UT": "Utah", "VT": "Vermont", "VA": "Virginia", "WA": "Washington",
+  "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming"
+};
+
+const TRANSLATIONS = {
+  BR: {
+    "title": "Trove BR | Curated Vintage & Second-Hand Fashion Marketplace",
+    "logo": "TROVE BR",
+    "advertise-btn": "Anuncie sua loja",
+    "hero-title": "Tesouros curados dos melhores brechós locais.",
+    "hero-subtitle": "Peças únicas de sua preferência",
+    "banner-browsing": "Navegando no acervo de ",
+    "banner-clear": "Ver todas as lojas",
+    "filter-cat-label": "Todas as Categorias",
+    "cat-all": "Todas as Categorias",
+    "cat-feminino": "Feminino",
+    "cat-masculino": "Masculino",
+    "cat-vintage": "Vintage",
+    "cat-streetwear": "Streetwear",
+    "cat-calçados": "Calçados",
+    "cat-acessórios": "Acessórios",
+    "filter-loc-label": "Todas as Regiões",
+    "loc-all": "Todas as Regiões",
+    "filter-shop-label": "Todas as Lojas",
+    "empty-title": "Nenhum desapego cadastrado nesta região ainda.",
+    "empty-desc": "Tente ajustar os filtros ou volte mais tarde para conferir as novidades.",
+    "reset-btn": "Limpar Filtros",
+    "footer-text": "TROVE &copy; 2026 - Conectando moda circular local.",
+    "login-badge": "Acesso Vendedor",
+    "login-heading": "Entrar",
+    "label-email": "E-mail",
+    "label-password": "Senha",
+    "login-btn": "Entrar",
+    "toggle-no-account": "Não tem uma conta de vendedor?",
+    "toggle-signup-link": "Cadastre-se",
+    "signup-badge": "Novo Acervo",
+    "signup-heading": "Criar Conta Vendedor",
+    "strength-label": "Força: -",
+    "crit-length": "Mínimo de 6 caracteres",
+    "crit-upper": "Uma letra maiúscula",
+    "crit-number": "Pelo menos um número",
+    "signup-btn": "Registrar Conta",
+    "toggle-has-account": "Já possui um cadastro?",
+    "toggle-login-link": "Entrar",
+    "confirm-badge": "Confirmação",
+    "confirm-heading": "Verifique seu E-mail",
+    "confirm-desc": "Enviamos um link de confirmação para o endereço:",
+    "confirm-subdesc": "Acesse sua caixa de entrada para ativar sua conta de vendedor.",
+    "open-gmail": "Abrir Gmail",
+    "open-outlook": "Abrir Outlook",
+    "resend-btn-text": "Reenviar e-mail",
+    "back-home": "Voltar para o Início",
+    "create-badge": "Nova Loja",
+    "create-heading": "Cadastre seu Brechó",
+    "create-subheading": "Insira os dados do seu acervo para começar a publicar.",
+    "label-store-name": "Nome do Brechó",
+    "label-store-handle": "Identificador/Handle (@)",
+    "label-store-phone": "WhatsApp para Vendas (DDD + Número)",
+    "label-store-country": "País do Brechó",
+    "create-btn": "Criar Meu Brechó",
+    "translation-prompt-text": "Prefere o catálogo em Inglês? Conheça nossa loja dos EUA.",
+    "translation-prompt-btn": "Mudar para EUA 🇺🇸",
+    // JS strings
+    "search-placeholder": "Pesquisar por peça, categoria ou brechó...",
+    "sold": "Vendido",
+    "unique-piece": "Peça Única",
+    "size-label": "Tam: ",
+    "secure-wa": "Garantir Peça (WhatsApp)",
+    "unavailable": "Indisponível",
+    "drawer-size": "Tamanho",
+    "drawer-price": "Preço",
+    "drawer-shipping": "Envio",
+    "drawer-loc": "Local",
+    "drawer-about": "Sobre o Item",
+    "drawer-no-desc": "Sem descrição disponível.",
+    "toast-success-login": "Login efetuado com sucesso!",
+    "toast-error-login": "Erro ao entrar: ",
+    "toast-success-signup": "Cadastro efetuado!",
+    "toast-success-signup-confirm": "Cadastro efetuado! Confirme seu e-mail.",
+    "toast-error-signup": "Erro no cadastro: ",
+    "toast-success-store": "Brechó cadastrado com sucesso!",
+    "toast-error-store": "Erro ao cadastrar brechó: ",
+    "toast-loc-detected": "Localização detectada: ",
+    "toast-loc-recommending": ". Recomendando desapegos da sua região!"
+  },
+  US: {
+    "title": "Trove USA | Curated Vintage & Second-Hand Fashion Marketplace",
+    "logo": "TROVE USA",
+    "advertise-btn": "Advertise your store",
+    "hero-title": "Curated treasures from the best local thrift stores.",
+    "hero-subtitle": "Unique pieces of your choice",
+    "banner-browsing": "Browsing the catalog of ",
+    "banner-clear": "View all stores",
+    "filter-cat-label": "All Categories",
+    "cat-all": "All Categories",
+    "cat-feminino": "Women's",
+    "cat-masculino": "Men's",
+    "cat-vintage": "Vintage",
+    "cat-streetwear": "Streetwear",
+    "cat-calçados": "Shoes",
+    "cat-acessórios": "Accessories",
+    "filter-loc-label": "All Regions",
+    "loc-all": "All Regions",
+    "filter-shop-label": "All Stores",
+    "empty-title": "No unique pieces registered in this region yet.",
+    "empty-desc": "Try adjusting the filters or check back later for updates.",
+    "reset-btn": "Clear Filters",
+    "footer-text": "TROVE &copy; 2026 - Connecting local circular fashion.",
+    "login-badge": "Seller Access",
+    "login-heading": "Log In",
+    "label-email": "Email",
+    "label-password": "Password",
+    "login-btn": "Log In",
+    "toggle-no-account": "Don't have a seller account?",
+    "toggle-signup-link": "Sign Up",
+    "signup-badge": "New Collection",
+    "signup-heading": "Create Seller Account",
+    "strength-label": "Strength: -",
+    "crit-length": "Minimum 6 characters",
+    "crit-upper": "One uppercase letter",
+    "crit-number": "At least one number",
+    "signup-btn": "Register Account",
+    "toggle-has-account": "Already registered?",
+    "toggle-login-link": "Log In",
+    "confirm-badge": "Confirmation",
+    "confirm-heading": "Verify your Email",
+    "confirm-desc": "We sent a confirmation link to the address:",
+    "confirm-subdesc": "Check your inbox to activate your seller account.",
+    "open-gmail": "Open Gmail",
+    "open-outlook": "Open Outlook",
+    "resend-btn-text": "Resend email",
+    "back-home": "Back to Home",
+    "create-badge": "New Store",
+    "create-heading": "Register your Thrift Store",
+    "create-subheading": "Enter your inventory details to start publishing.",
+    "label-store-name": "Store Name",
+    "label-store-handle": "Handle (@)",
+    "label-store-phone": "WhatsApp for Sales (Country/Area Code + Number)",
+    "label-store-country": "Store Country",
+    "create-btn": "Create My Store",
+    "translation-prompt-text": "Prefere em Português? Mude para o catálogo do Brasil.",
+    "translation-prompt-btn": "Switch to Brazil 🇧🇷",
+    // JS strings
+    "search-placeholder": "Search by piece, category or store...",
+    "sold": "Sold",
+    "unique-piece": "Unique Piece",
+    "size-label": "Size: ",
+    "secure-wa": "Secure Piece (WhatsApp)",
+    "unavailable": "Unavailable",
+    "drawer-size": "Size",
+    "drawer-price": "Price",
+    "drawer-shipping": "Shipping",
+    "drawer-loc": "Location",
+    "drawer-about": "About the Item",
+    "drawer-no-desc": "No description available.",
+    "toast-success-login": "Login successful!",
+    "toast-error-login": "Error logging in: ",
+    "toast-success-signup": "Registration successful!",
+    "toast-success-signup-confirm": "Registration successful! Verify your email.",
+    "toast-error-signup": "Registration error: ",
+    "toast-success-store": "Thrift store successfully registered!",
+    "toast-error-store": "Error registering thrift store: ",
+    "toast-loc-detected": "Location detected: ",
+    "toast-loc-recommending": ". Recommending items from your area!"
+  }
+};
+
 const state = {
   cat: "all",
   shop: "all",
@@ -77,10 +264,164 @@ let resendSeconds = 60;
 
 document.addEventListener("DOMContentLoaded", async () => {
   await loadCatalog();
+  
+  // 1. Read URL Search Parameters
+  const params = new URLSearchParams(window.location.search);
+  const countryParam = params.get("country");
+  
+  if (countryParam && (countryParam === "BR" || countryParam === "US")) {
+    state.country = countryParam;
+  } else {
+    // 2. Geolocation detection if no country param is supplied
+    await detectGeolocation();
+  }
+
+  // Translate page to active country's language
+  translatePage(state.country);
+  updateRegionsDropdown();
+  initShopDropdown();
+
   checkSharedLink();
   bindEvents();
+  setupTranslationPromptCard();
   await checkSession();
 });
+
+function translatePage(lang) {
+  const dict = TRANSLATIONS[lang];
+  if (!dict) return;
+
+  // Document Title
+  document.title = dict.title;
+
+  // Header Logo
+  const headerLogo = document.getElementById("header-logo");
+  if (headerLogo) headerLogo.textContent = dict.logo;
+
+  // Search input placeholder
+  const searchInput = document.getElementById("search-input");
+  if (searchInput) {
+    searchInput.placeholder = dict["search-placeholder"];
+  }
+
+  // All translatable HTML nodes
+  document.querySelectorAll("[data-translate]").forEach(el => {
+    const key = el.getAttribute("data-translate");
+    if (dict[key]) {
+      if (el.tagName === "INPUT" && el.type === "submit") {
+        el.value = dict[key];
+      } else if (el.tagName === "TEXTAREA" || el.tagName === "INPUT") {
+        el.placeholder = dict[key];
+      } else {
+        el.innerHTML = dict[key];
+      }
+    }
+  });
+
+  // Header switcher trigger
+  const activeCountryFlag = document.getElementById("active-country-flag");
+  const activeCountryLabel = document.getElementById("active-country-label");
+  if (activeCountryFlag && activeCountryLabel) {
+    activeCountryFlag.textContent = lang === "BR" ? "🇧🇷" : "🇺🇸";
+    activeCountryLabel.textContent = lang;
+  }
+
+  // Set HTML lang attribute
+  document.documentElement.lang = lang === "BR" ? "pt-BR" : "en-US";
+}
+
+async function detectGeolocation() {
+  try {
+    const res = await Promise.race([
+      fetch("https://ipapi.co/json/"),
+      new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 3000))
+    ]);
+    if (!res.ok) throw new Error("Fetch failed");
+    const data = await res.json();
+    
+    const detectedCountry = data.country_code; // e.g. "BR" or "US"
+    const detectedRegion = data.region_code; // e.g. "AM" or "NY"
+    const detectedCity = data.city || "";
+
+    if (detectedCountry === "BR" || detectedCountry === "US") {
+      state.country = detectedCountry;
+      
+      const isBR = detectedCountry === "BR";
+      const statesDict = isBR ? BR_STATES : US_STATES;
+      
+      if (detectedRegion && statesDict[detectedRegion.toUpperCase()]) {
+        state.loc = detectedRegion.toUpperCase();
+        
+        // Show premium toast
+        const dict = TRANSLATIONS[state.country];
+        const stateName = statesDict[state.loc];
+        const cityName = detectedCity ? `${detectedCity}, ` : "";
+        
+        setTimeout(() => {
+          showToast(`${dict["toast-loc-detected"]}${cityName}${stateName} (${state.loc})${dict["toast-loc-recommending"]}`, "success");
+        }, 1000);
+      }
+    }
+  } catch (err) {
+    console.warn("Geolocation detection failed, defaulting to BR:", err);
+    state.country = "BR";
+    state.loc = "all";
+  }
+}
+
+function setupTranslationPromptCard() {
+  const card = document.getElementById("translation-prompt-card");
+  const closeBtn = document.getElementById("translation-prompt-close");
+  const toggleBtn = document.getElementById("translation-prompt-btn");
+  const textPrompt = document.getElementById("translation-prompt-text");
+  
+  if (!card || !closeBtn || !toggleBtn) return;
+
+  if (sessionStorage.getItem("translation-prompt-dismissed") === "true") {
+    card.style.display = "none";
+    return;
+  }
+
+  // Update card content based on active language
+  const isBR = state.country === "BR";
+  if (isBR) {
+    textPrompt.textContent = "Prefer English? Browse our US marketplace.";
+    toggleBtn.textContent = "Switch to US 🇺🇸";
+  } else {
+    textPrompt.textContent = "Prefere em Português? Conheça nossa loja do Brasil.";
+    toggleBtn.textContent = "Mudar para Brasil 🇧🇷";
+  }
+
+  // Show card with transition after 1.5s delay
+  setTimeout(() => {
+    if (sessionStorage.getItem("translation-prompt-dismissed") !== "true") {
+      card.style.display = "flex";
+    }
+  }, 1500);
+
+  closeBtn.addEventListener("click", () => {
+    card.style.display = "none";
+    sessionStorage.setItem("translation-prompt-dismissed", "true");
+  });
+
+  toggleBtn.addEventListener("click", () => {
+    card.style.display = "none";
+    sessionStorage.setItem("translation-prompt-dismissed", "true");
+    
+    const newCountry = state.country === "BR" ? "US" : "BR";
+    state.country = newCountry;
+    
+    // Update URL param
+    window.history.pushState(null, "", `?country=${newCountry}`);
+    
+    // Update switchers, translate page, reload drops
+    translatePage(newCountry);
+    updateRegionsDropdown();
+    initShopDropdown();
+    reset();
+  });
+}
+
 
 async function loadCatalog() {
   const { data: shops, error: sErr } = await client.from("trove_stores").select("*");
@@ -137,12 +478,13 @@ function checkSharedLink() {
 }
 
 function initShopDropdown() {
+  const dict = TRANSLATIONS[state.country];
   let html = `
     <button class="shop-item selected" data-shop="all">
       <div class="shop-avatar">A</div>
       <div class="shop-item-info">
-        <span class="shop-item-name">Todas as Lojas</span>
-        <span class="shop-item-handle">Todos os acervos</span>
+        <span class="shop-item-name">${dict["filter-shop-label"]}</span>
+        <span class="shop-item-handle">${state.country === "BR" ? "Todos os acervos" : "All collections"}</span>
       </div>
     </button>
   `;
@@ -178,7 +520,11 @@ function initShopDropdown() {
 }
 
 function getWaLink(item) {
-  const msg = `Olá! Vi a peça *${item.name}* no valor de *R$${item.price}* na Trove e quero ficar com ela!`;
+  const isBR = state.country === "BR";
+  const currency = isBR ? "R$" : "$";
+  const msg = isBR 
+    ? `Olá! Vi a peça *${item.name}* no valor de *${currency}${item.price}* na Trove e quero ficar com ela!`
+    : `Hello! I saw the item *${item.name}* priced at *${currency}${item.price}* on Trove and I want to secure it!`;
   return `https://wa.me/${item.store.phone}?text=${encodeURIComponent(msg)}`;
 }
 
@@ -213,25 +559,26 @@ function render() {
 
     filtered.forEach(item => {
       const isSold = item.status === "vendido";
+      const dict = TRANSLATIONS[state.country];
       const card = document.createElement("article");
       card.className = "product-card";
       card.style.opacity = isSold ? "0.6" : "1";
       card.innerHTML = `
         <div class="card-img-wrapper">
-          <span class="card-badge">${isSold ? "Vendido" : "Peça Única"}</span>
+          <span class="card-badge">${isSold ? dict["sold"] : dict["unique-piece"]}</span>
           <img class="card-img" src="${item.img}" alt="${item.name}" loading="lazy">
         </div>
         <div class="card-info">
           <span class="card-shop">${item.store.handle}</span>
           <h2 class="card-title">${item.name}</h2>
           <div class="card-meta-row">
-            <span class="card-size">Size: ${item.size}</span>
-            <span class="card-price">R$ ${item.price}</span>
+            <span class="card-size">${dict["size-label"]}${item.size}</span>
+            <span class="card-price">${state.country === "BR" ? "R$ " : "$ "}${item.price}</span>
           </div>
         </div>
         <button class="wa-button" data-id="${item.id}" ${isSold ? "disabled style='background-color:var(--color-border);color:var(--color-text-secondary);'" : ""} aria-label="Comprar ${item.name} no WhatsApp">
           <svg class="btn-wa-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-          ${isSold ? "Indisponível" : "Secure Piece (WhatsApp)"}
+          ${isSold ? dict["unavailable"] : dict["secure-wa"]}
         </button>
       `;
 
@@ -255,9 +602,14 @@ function openDrawer(item) {
   const link = getWaLink(item);
   const isSold = item.status === "vendido";
   
+  const dict = TRANSLATIONS[state.country];
+  const isBR = state.country === "BR";
+  const currency = isBR ? "R$" : "$";
+  const stateLabelText = isBR ? (BR_STATES[item.state] || item.state) : (US_STATES[item.state] || item.state);
+
   drawerBody.innerHTML = `
     <div class="drawer-img-wrapper">
-      <span class="drawer-badge">${isSold ? "Vendido" : "Peça Única"}</span>
+      <span class="drawer-badge">${isSold ? dict["sold"] : dict["unique-piece"]}</span>
       <img class="drawer-img" src="${item.img}" alt="${item.name}">
     </div>
     <div class="drawer-info">
@@ -266,33 +618,33 @@ function openDrawer(item) {
       
       <div class="drawer-meta-grid">
         <div class="drawer-meta-item">
-          <span class="drawer-meta-label">Tamanho</span>
+          <span class="drawer-meta-label">${dict["drawer-size"]}</span>
           <span class="drawer-meta-val">${item.size}</span>
         </div>
         <div class="drawer-meta-item">
-          <span class="drawer-meta-label">Preço</span>
-          <span class="drawer-meta-val">R$ ${item.price}</span>
+          <span class="drawer-meta-label">${dict["drawer-price"]}</span>
+          <span class="drawer-meta-val">${currency} ${item.price}</span>
         </div>
       </div>
 
       <div class="drawer-meta-grid" style="border-bottom:none; margin-bottom:12px; padding-bottom:0;">
         <div class="drawer-meta-item">
-          <span class="drawer-meta-label">Envio</span>
-          <span class="drawer-meta-val" style="font-size:0.95rem;">${item.shipping || "Nacional"}</span>
+          <span class="drawer-meta-label">${dict["drawer-shipping"]}</span>
+          <span class="drawer-meta-val" style="font-size:0.95rem;">${item.shipping || (isBR ? "Nacional" : "National")}</span>
         </div>
         <div class="drawer-meta-item">
-          <span class="drawer-meta-label">Local</span>
-          <span class="drawer-meta-val" style="font-size:0.95rem;">${item.state}</span>
+          <span class="drawer-meta-label">${dict["drawer-loc"]}</span>
+          <span class="drawer-meta-val" style="font-size:0.95rem;">${stateLabelText} (${item.state})</span>
         </div>
       </div>
 
-      <h2 class="drawer-desc-title">Sobre o Item</h2>
-      <p class="drawer-desc-text">${item.desc || "Sem descrição disponível."}</p>
+      <h2 class="drawer-desc-title">${dict["drawer-about"]}</h2>
+      <p class="drawer-desc-text">${item.desc || dict["drawer-no-desc"]}</p>
     </div>
     <div class="drawer-cta-wrapper">
       <a href="${isSold ? '#' : link}" target="${isSold ? '_self' : '_blank'}" rel="noopener noreferrer" class="drawer-cta-btn" ${isSold ? "style='background-color:var(--color-border);color:var(--color-text-secondary);pointer-events:none;'" : ""}>
         <svg class="btn-wa-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-        ${isSold ? "Peça Indisponível" : "Comprar Peça (WhatsApp)"}
+        ${isSold ? dict["unavailable"] : dict["secure-wa"]}
       </a>
     </div>
   `;
@@ -621,14 +973,21 @@ function bindEvents() {
     
     state.country = newCountry;
     
-    document.getElementById("active-country-flag").textContent = newCountry === "BR" ? "🇧🇷" : "🇺🇸";
-    document.getElementById("active-country-label").textContent = newCountry;
+    // Update URL query parameter
+    window.history.pushState(null, "", `?country=${newCountry}`);
+    
+    // Translate the entire page dynamically
+    translatePage(newCountry);
     
     countryMenu.querySelectorAll(".country-opt").forEach(opt => {
       opt.classList.toggle("selected", opt.dataset.country === newCountry);
     });
     
     countryMenu.style.display = "none";
+    
+    // Hide translation prompt card since user explicitly selected their country
+    const translationCard = document.getElementById("translation-prompt-card");
+    if (translationCard) translationCard.style.display = "none";
     
     updateRegionsDropdown();
     initShopDropdown();
@@ -752,24 +1111,25 @@ function bindEvents() {
     const email = document.getElementById("login-email").value;
     const password = document.getElementById("login-password").value;
     const btn = document.getElementById("login-submit-btn");
+    const dict = TRANSLATIONS[state.country];
 
     btn.disabled = true;
-    btn.textContent = "Entrando...";
+    btn.textContent = state.country === "BR" ? "Entrando..." : "Logging in...";
 
     try {
       const { data, error } = await client.auth.signInWithPassword({ email, password });
       if (error) {
-        showToast("Erro ao entrar: " + error.message, "error");
+        showToast(dict["toast-error-login"] + error.message, "error");
       } else {
-        showToast("Login efetuado com sucesso!", "success");
+        showToast(dict["toast-success-login"], "success");
         sellerState.user = data.user;
         await fetchSellerStoreAfterLogin();
       }
     } catch (err) {
-      showToast("Erro inesperado: " + err.message, "error");
+      showToast((state.country === "BR" ? "Erro inesperado: " : "Unexpected error: ") + err.message, "error");
     } finally {
       btn.disabled = false;
-      btn.textContent = "Entrar";
+      btn.textContent = dict["login-btn"];
     }
   });
 
@@ -778,31 +1138,32 @@ function bindEvents() {
     const email = document.getElementById("signup-email").value;
     const password = signupPass.value;
     const btn = document.getElementById("signup-submit-btn");
+    const dict = TRANSLATIONS[state.country];
 
     btn.disabled = true;
-    btn.textContent = "Registrando...";
+    btn.textContent = state.country === "BR" ? "Registrando..." : "Registering...";
 
     try {
       const { data, error } = await client.auth.signUp({ email, password });
       if (error) {
-        showToast("Erro no cadastro: " + error.message, "error");
+        showToast(dict["toast-error-signup"] + error.message, "error");
       } else {
         if (data.session) {
-          showToast("Cadastro efetuado!", "success");
+          showToast(dict["toast-success-signup"], "success");
           sellerState.user = data.user;
           showView("create-store");
         } else {
-          showToast("Cadastro efetuado! Confirme seu e-mail.", "success");
+          showToast(dict["toast-success-signup-confirm"], "success");
           document.getElementById("confirm-email-address").textContent = email;
           showView("email-confirm");
           startResendCountdown(email);
         }
       }
     } catch (err) {
-      showToast("Erro inesperado: " + err.message, "error");
+      showToast((state.country === "BR" ? "Erro inesperado: " : "Unexpected error: ") + err.message, "error");
     } finally {
       btn.disabled = false;
-      btn.textContent = "Registrar Conta";
+      btn.textContent = dict["signup-btn"];
     }
   });
 
@@ -814,8 +1175,9 @@ function bindEvents() {
     const country = document.getElementById("store-country").value;
 
     const submitBtn = createStoreForm.querySelector("button[type='submit']");
+    const dict = TRANSLATIONS[state.country];
     submitBtn.disabled = true;
-    submitBtn.textContent = "Criando...";
+    submitBtn.textContent = state.country === "BR" ? "Criando..." : "Creating...";
 
     const formattedHandle = handle.startsWith("@") ? handle : "@" + handle;
 
@@ -826,17 +1188,17 @@ function bindEvents() {
         .select();
 
       if (error) {
-        showToast("Erro ao cadastrar brechó: " + error.message, "error");
+        showToast(dict["toast-error-store"] + error.message, "error");
       } else {
-        showToast("Brechó cadastrado com sucesso!", "success");
+        showToast(dict["toast-success-store"], "success");
         sellerState.store = data[0];
         window.location.href = "dashboard.html";
       }
     } catch (err) {
-      showToast("Erro inesperado: " + err.message, "error");
+      showToast((state.country === "BR" ? "Erro inesperado: " : "Unexpected error: ") + err.message, "error");
     } finally {
       submitBtn.disabled = false;
-      submitBtn.textContent = "Criar Meu Brechó";
+      submitBtn.textContent = dict["create-btn"];
     }
   });
 
@@ -854,11 +1216,13 @@ function reset() {
   state.loc = "all";
   state.q = "";
   
+  const dict = TRANSLATIONS[state.country];
+  
   search.value = "";
   clearSearch.style.display = "none";
-  shopLabel.textContent = "Todas as Lojas";
-  catsLabel.textContent = "Todas as Categorias";
-  stateLabel.textContent = "Todas as Regiões";
+  shopLabel.textContent = dict["filter-shop-label"];
+  catsLabel.textContent = dict["filter-cat-label"];
+  stateLabel.textContent = dict["filter-loc-label"];
 
   document.querySelectorAll(".shop-item").forEach(i => {
     i.classList.toggle("selected", i.dataset.shop === "all");
@@ -892,25 +1256,41 @@ function updateRegionsDropdown() {
   const stateLabel = document.getElementById("active-state-label");
   if (!stateMenu || !stateLabel) return;
 
-  state.loc = "all";
-  
-  if (state.country === "BR") {
-    stateLabel.textContent = "Todas as Regiões";
-    stateMenu.innerHTML = `
-      <button class="state-item selected" data-state="all">Todas as Regiões</button>
-      <button class="state-item" data-state="AM">Amazonas (AM)</button>
-      <button class="state-item" data-state="SP">São Paulo (SP)</button>
-      <button class="state-item" data-state="RJ">Rio de Janeiro (RJ)</button>
-      <button class="state-item" data-state="PR">Paraná (PR)</button>
-    `;
+  const isBR = state.country === "BR";
+  const dict = TRANSLATIONS[state.country];
+  const statesDict = isBR ? BR_STATES : US_STATES;
+
+  // Extract unique states for the current country from the items loaded
+  const activeStates = new Set();
+  ITEMS.forEach(item => {
+    const fullStore = STORES_LIST.find(st => st.id === item.store.id);
+    const storeCountry = fullStore ? fullStore.country : "BR";
+    if (storeCountry === state.country && item.state) {
+      activeStates.add(item.state.toUpperCase());
+    }
+  });
+
+  const stateList = Array.from(activeStates).sort();
+
+  if (state.loc === "all") {
+    stateLabel.textContent = dict["filter-loc-label"];
   } else {
-    stateLabel.textContent = "All Regions";
-    stateMenu.innerHTML = `
-      <button class="state-item selected" data-state="all">All Regions</button>
-      <button class="state-item" data-state="NY">New York (NY)</button>
-      <button class="state-item" data-state="CA">California (CA)</button>
-      <button class="state-item" data-state="FL">Florida (FL)</button>
-      <button class="state-item" data-state="TX">Texas (TX)</button>
-    `;
+    const stateName = statesDict[state.loc] || state.loc;
+    stateLabel.textContent = `${stateName} (${state.loc})`;
   }
+
+  let html = `
+    <button class="state-item ${state.loc === "all" ? "selected" : ""}" data-state="all">${dict["loc-all"]}</button>
+  `;
+
+  stateList.forEach(stCode => {
+    const stateName = statesDict[stCode] || stCode;
+    html += `
+      <button class="state-item ${state.loc === stCode ? "selected" : ""}" data-state="${stCode}">
+        ${stateName} (${stCode})
+      </button>
+    `;
+  });
+
+  stateMenu.innerHTML = html;
 }

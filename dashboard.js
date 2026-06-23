@@ -3,6 +3,30 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+const BR_STATES = {
+  "AM": "Amazonas", "SP": "São Paulo", "RJ": "Rio de Janeiro", "PR": "Paraná",
+  "AC": "Acre", "AL": "Alagoas", "AP": "Amapá", "BA": "Bahia", "CE": "Ceará",
+  "DF": "Distrito Federal", "ES": "Espírito Santo", "GO": "Goiás", "MA": "Maranhão",
+  "MT": "Mato Grosso", "MS": "Mato Grosso do Sul", "MG": "Minas Gerais", "PA": "Pará",
+  "PB": "Paraíba", "PE": "Pernambuco", "PI": "Piauí", "RN": "Rio Grande do Norte",
+  "RS": "Rio Grande do Sul", "RO": "Rondônia", "RR": "Roraima", "SC": "Santa Catarina",
+  "SE": "Sergipe", "TO": "Tocantins"
+};
+
+const US_STATES = {
+  "NY": "New York", "CA": "California", "FL": "Florida", "TX": "Texas",
+  "AL": "Alabama", "AK": "Alaska", "AZ": "Arizona", "AR": "Arkansas", "CO": "Colorado",
+  "CT": "Connecticut", "DE": "Delaware", "GA": "Georgia", "HI": "Hawaii", "ID": "Idaho",
+  "IL": "Illinois", "IN": "Indiana", "IA": "Iowa", "KS": "Kansas", "KY": "Kentucky",
+  "LA": "Louisiana", "ME": "Maine", "MD": "Maryland", "MA": "Massachusetts", "MI": "Michigan",
+  "MN": "Minnesota", "MS": "Mississippi", "MO": "Missouri", "MT": "Montana", "NE": "Nebraska",
+  "NV": "Nevada", "NH": "New Hampshire", "NJ": "New Jersey", "NM": "New Mexico",
+  "NC": "North Carolina", "ND": "North Dakota", "OH": "Ohio", "OK": "Oklahoma", "OR": "Oregon",
+  "PA": "Pennsylvania", "RI": "Rhode Island", "SC": "South Carolina", "SD": "South Dakota",
+  "TN": "Tennessee", "UT": "Utah", "VT": "Vermont", "VA": "Virginia", "WA": "Washington",
+  "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming"
+};
+
 const state = {
   user: null,
   store: null,
@@ -83,26 +107,30 @@ function populateStoreSettings() {
   settingsName.value = state.store.name;
   settingsHandle.value = state.store.handle;
   settingsPhone.value = state.store.phone;
-  document.getElementById("settings-country").value = state.store.country || "BR";
+  
+  const country = state.store.country || "BR";
+  document.getElementById("settings-country").value = country;
 
-  const itemStateSelect = document.getElementById("item-state");
-  if (state.store.country === "US") {
-    itemStateSelect.innerHTML = `
-      <option value="NY">New York (NY)</option>
-      <option value="CA">California (CA)</option>
-      <option value="FL">Florida (FL)</option>
-      <option value="TX">Texas (TX)</option>
-    `;
-  } else {
-    itemStateSelect.innerHTML = `
-      <option value="AM">Amazonas (AM)</option>
-      <option value="SP">São Paulo (SP)</option>
-      <option value="RJ">Rio de Janeiro (RJ)</option>
-      <option value="PR">Paraná (PR)</option>
-    `;
-  }
+  updateStateDropdown(country);
 
   updateLogoUI();
+}
+
+function updateStateDropdown(country) {
+  const itemStateSelect = document.getElementById("item-state");
+  if (!itemStateSelect) return;
+
+  const statesDict = country === "US" ? US_STATES : BR_STATES;
+  let html = "";
+  
+  // Sort states alphabetically by name
+  const sortedStates = Object.entries(statesDict).sort((a, b) => a[1].localeCompare(b[1]));
+
+  sortedStates.forEach(([code, name]) => {
+    html += `<option value="${code}">${name} (${code})</option>`;
+  });
+
+  itemStateSelect.innerHTML = html;
 }
 
 function updateLogoUI() {
@@ -205,6 +233,10 @@ function bindEvents() {
   const sizeInput = document.getElementById("item-size");
   sizeInput.addEventListener("input", (e) => {
     e.target.value = e.target.value.toUpperCase();
+  });
+
+  document.getElementById("settings-country").addEventListener("change", (e) => {
+    updateStateDropdown(e.target.value);
   });
 
   // Copy store link

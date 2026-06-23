@@ -52,7 +52,7 @@
         </div>
 
         <!-- Merged: Single entry point button -->
-        <button class="cta-button" id="advertise-trigger">Anuncie sua loja</button>
+        <button class="cta-button" id="advertise-trigger" data-translate="advertise-btn">Anuncie sua loja</button>
         <!-- Circular avatar profile menu (shown when logged in) -->
         <button class="profile-avatar" id="profile-avatar-btn" style="display: none;" aria-label="Abrir central de controle">
           <span id="profile-avatar-letter">V</span>
@@ -64,8 +64,8 @@
   <!-- HERO SECTION -->
   <section class="hero-section">
     <div class="hero-container">
-      <h1 class="hero-title">Tesouros curados dos melhores brechós locais.</h1>
-      <p class="hero-subtitle">Peças únicas de sua preferência</p>
+      <h1 class="hero-title" data-translate="hero-title">Tesouros curados dos melhores brechós locais.</h1>
+      <p class="hero-subtitle" data-translate="hero-subtitle">Peças únicas de sua preferência</p>
     </div>
   </section>
 
@@ -75,11 +75,11 @@
       <div class="shop-banner-details">
         <div class="shop-banner-logo-wrapper" id="shop-banner-logo-wrapper" style="width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--color-border); overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background-color: var(--color-bg);"></div>
         <div class="shop-banner-meta">
-          <span id="shop-banner-title">Navegando no acervo de Loja</span>
+          <span id="shop-banner-title" data-translate="banner-browsing">Navegando no acervo de Loja</span>
           <span id="shop-banner-handle">@loja</span>
         </div>
       </div>
-      <button class="shop-banner-clear-btn" id="shop-banner-clear-btn">
+      <button class="shop-banner-clear-btn" id="shop-banner-clear-btn" data-translate="banner-clear">
         Ver todas as lojas
       </button>
     </div>
@@ -92,16 +92,16 @@
       <div class="cats-filter" id="cats-filter">
         <button class="cats-filter-trigger" id="cats-filter-btn" aria-haspopup="listbox" aria-expanded="false">
           <svg class="dots-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1.5"></circle><circle cx="6" cy="12" r="1.5"></circle><circle cx="18" cy="12" r="1.5"></circle></svg>
-          <span id="active-cat-label">Todas as Categorias</span>
+          <span id="active-cat-label" data-translate="filter-cat-label">Todas as Categorias</span>
         </button>
         <div class="cats-dropdown-menu" id="cats-dropdown-menu" role="listbox">
-          <button class="cat-item selected" data-category="all">All Items</button>
-          <button class="cat-item" data-category="Feminino">Feminino</button>
-          <button class="cat-item" data-category="Masculino">Masculino</button>
-          <button class="cat-item" data-category="Vintage">Vintage</button>
-          <button class="cat-item" data-category="Streetwear">Streetwear</button>
-          <button class="cat-item" data-category="Calçados">Calçados</button>
-          <button class="cat-item" data-category="Acessórios">Acessórios</button>
+          <button class="cat-item selected" data-category="all" data-translate="cat-all">Todas as Categorias</button>
+          <button class="cat-item" data-category="Feminino" data-translate="cat-feminino">Feminino</button>
+          <button class="cat-item" data-category="Masculino" data-translate="cat-masculino">Masculino</button>
+          <button class="cat-item" data-category="Vintage" data-translate="cat-vintage">Vintage</button>
+          <button class="cat-item" data-category="Streetwear" data-translate="cat-streetwear">Streetwear</button>
+          <button class="cat-item" data-category="Calçados" data-translate="cat-calçados">Calçados</button>
+          <button class="cat-item" data-category="Acessórios" data-translate="cat-acessórios">Acessórios</button>
         </div>
       </div>
 
@@ -109,15 +109,11 @@
       <div class="state-filter" id="state-filter">
         <button class="state-filter-trigger" id="state-filter-btn" aria-haspopup="listbox" aria-expanded="false">
           <svg class="map-pin-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          <span id="active-state-label">Todas as Regiões</span>
+          <span id="active-state-label" data-translate="filter-loc-label">Todas as Regiões</span>
           <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </button>
         <div class="state-dropdown-menu" id="state-dropdown-menu" role="listbox">
-          <button class="state-item selected" data-state="all">Todas as Regiões</button>
-          <button class="state-item" data-state="AM">Amazonas (AM)</button>
-          <button class="state-item" data-state="SP">São Paulo (SP)</button>
-          <button class="state-item" data-state="RJ">Rio de Janeiro (RJ)</button>
-          <button class="state-item" data-state="PR">Paraná (PR)</button>
+          <button class="state-item selected" data-state="all" data-translate="loc-all">Todas as Regiões</button>
         </div>
       </div>
 
@@ -125,7 +121,7 @@
       <div class="shop-filter" id="shop-filter">
         <button class="shop-filter-trigger" id="shop-filter-btn" aria-haspopup="listbox" aria-expanded="false">
           <svg class="shop-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          <span id="active-shop-label">Todas as Lojas</span>
+          <span id="active-shop-label" data-translate="filter-shop-label">Todas as Lojas</span>
           <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </button>
         <div class="shop-dropdown-menu" id="shop-dropdown-menu" role="listbox">
@@ -144,9 +140,9 @@
       <!-- Empty State -->
       <div class="empty-state" id="empty-state" style="display: none;">
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-        <h3>Nenhum desapego cadastrado nesta região ainda.</h3>
-        <p>Tente ajustar os filtros ou volte mais tarde para conferir as novidades.</p>
-        <button id="reset-filters-btn" class="reset-btn">Limpar Filtros</button>
+        <h3 data-translate="empty-title">Nenhum desapego cadastrado nesta região ainda.</h3>
+        <p data-translate="empty-desc">Tente ajustar os filtros ou volte mais tarde para conferir as novidades.</p>
+        <button id="reset-filters-btn" class="reset-btn" data-translate="reset-btn">Limpar Filtros</button>
       </div>
     </div>
   </main>
@@ -155,7 +151,7 @@
   <footer class="main-footer">
     <div class="footer-container">
       <p class="footer-brand">TROVE</p>
-      <p class="footer-text">TROVE &copy; 2026 - Connecting local circular fashion.</p>
+      <p class="footer-text" data-translate="footer-text">TROVE &copy; 2026 - Conectando moda circular local.</p>
     </div>
   </footer>
 
@@ -181,38 +177,38 @@
 
       <!-- VIEW 1: Login Form (Entrar) -->
       <div class="modal-content" id="seller-view-login">
-        <div class="modal-badge">Acesso Vendedor</div>
-        <h2 class="modal-heading">Entrar</h2>
+        <div class="modal-badge" data-translate="login-badge">Acesso Vendedor</div>
+        <h2 class="modal-heading" data-translate="login-heading">Entrar</h2>
         
         <form class="auth-form" id="login-form">
           <div class="form-group">
-            <label for="login-email">E-mail</label>
+            <label for="login-email" data-translate="label-email">E-mail</label>
             <input type="email" id="login-email" required placeholder="seu@email.com">
           </div>
           <div class="form-group">
-            <label for="login-password">Senha</label>
+            <label for="login-password" data-translate="label-password">Senha</label>
             <input type="password" id="login-password" required placeholder="Sua senha">
           </div>
-          <button type="submit" class="modal-cta-btn" id="login-submit-btn">Entrar</button>
+          <button type="submit" class="modal-cta-btn" id="login-submit-btn" data-translate="login-btn">Entrar</button>
         </form>
 
-        <p class="auth-toggle-text">
-          Não tem uma conta de vendedor? <a href="#" id="go-to-signup-btn">Cadastre-se</a>
+        <p class="auth-toggle-text" id="toggle-signup-wrapper">
+          <span data-translate="toggle-no-account">Não tem uma conta de vendedor?</span> <a href="#" id="go-to-signup-btn" data-translate="toggle-signup-link">Cadastre-se</a>
         </p>
       </div>
 
       <!-- VIEW 2: Register Form (Criar Conta) -->
       <div class="modal-content" id="seller-view-signup" style="display: none;">
-        <div class="modal-badge accent">Novo Acervo</div>
-        <h2 class="modal-heading">Criar Conta Vendedor</h2>
+        <div class="modal-badge accent" data-translate="signup-badge">Novo Acervo</div>
+        <h2 class="modal-heading" data-translate="signup-heading">Criar Conta Vendedor</h2>
         
         <form class="auth-form" id="signup-form">
           <div class="form-group">
-            <label for="signup-email">E-mail</label>
+            <label for="signup-email" data-translate="label-email">E-mail</label>
             <input type="email" id="signup-email" required placeholder="seu@email.com">
           </div>
           <div class="form-group">
-            <label for="signup-password">Senha</label>
+            <label for="signup-password" data-translate="label-password">Senha</label>
             <input type="password" id="signup-password" required placeholder="Mínimo 6 caracteres, maiúscula e número">
             
             <!-- Real-time Password Strength Meter -->
@@ -220,34 +216,34 @@
               <div class="strength-bar" id="strength-bar"></div>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-              <span class="strength-text" id="strength-text">Força: -</span>
+              <span class="strength-text" id="strength-text" data-translate="strength-label">Força: -</span>
             </div>
 
             <!-- Password Requirements Ticks -->
             <ul class="password-criteria" id="password-criteria" style="margin-top: 10px; text-align: left; list-style: none; padding-left: 0;">
               <li id="crit-length" class="criteria-item" style="font-size: 0.78rem; color: var(--color-text-secondary); display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                <span class="crit-icon" style="font-size: 0.85rem;">○</span> Mínimo de 6 caracteres
+                <span class="crit-icon" style="font-size: 0.85rem;">○</span> <span data-translate="crit-length">Mínimo de 6 caracteres</span>
               </li>
               <li id="crit-upper" class="criteria-item" style="font-size: 0.78rem; color: var(--color-text-secondary); display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                <span class="crit-icon" style="font-size: 0.85rem;">○</span> Uma letra maiúscula
+                <span class="crit-icon" style="font-size: 0.85rem;">○</span> <span data-translate="crit-upper">Uma letra maiúscula</span>
               </li>
               <li id="crit-number" class="criteria-item" style="font-size: 0.78rem; color: var(--color-text-secondary); display: flex; align-items: center; gap: 6px;">
-                <span class="crit-icon" style="font-size: 0.85rem;">○</span> Pelo menos um número
+                <span class="crit-icon" style="font-size: 0.85rem;">○</span> <span data-translate="crit-number">Pelo menos um número</span>
               </li>
             </ul>
           </div>
-          <button type="submit" class="modal-cta-btn" id="signup-submit-btn">Registrar Conta</button>
+          <button type="submit" class="modal-cta-btn" id="signup-submit-btn" data-translate="signup-btn">Registrar Conta</button>
         </form>
 
-        <p class="auth-toggle-text">
-          Já possui um cadastro? <a href="#" id="go-to-login-btn">Entrar</a>
+        <p class="auth-toggle-text" id="toggle-login-wrapper">
+          <span data-translate="toggle-has-account">Já possui um cadastro?</span> <a href="#" id="go-to-login-btn" data-translate="toggle-login-link">Entrar</a>
         </p>
       </div>
 
       <!-- VIEW 3: Email Confirmation Required (Elaborated) -->
       <div class="modal-content" id="seller-view-email-confirm" style="display: none;">
-        <div class="modal-badge accent">Confirmação</div>
-        <h2 class="modal-heading">Verifique seu E-mail</h2>
+        <div class="modal-badge accent" data-translate="confirm-badge">Confirmação</div>
+        <h2 class="modal-heading" data-translate="confirm-heading">Verifique seu E-mail</h2>
         
         <div class="confirm-email-art" style="margin: 20px 0;">
           <svg class="mail-icon" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-primary); animation: float 3s ease-in-out infinite;">
@@ -257,53 +253,64 @@
         </div>
         
         <p class="modal-description" style="margin-top:10px; margin-bottom: 20px; font-size: 0.92rem;">
-          Enviamos um link de confirmação para o endereço:<br><strong id="confirm-email-address" style="color: var(--color-primary); word-break: break-all;">seu@email.com</strong>.<br>Acesse sua caixa de entrada para ativar sua conta de vendedor.
+          <span data-translate="confirm-desc">Enviamos um link de confirmação para o endereço:</span><br><strong id="confirm-email-address" style="color: var(--color-primary); word-break: break-all;">seu@email.com</strong>.<br><span data-translate="confirm-subdesc">Acesse sua caixa de entrada para ativar sua conta de vendedor.</span>
         </p>
 
         <!-- Quick email provider links -->
         <div class="email-providers-row" style="display: flex; gap: 10px; width: 100%; margin-bottom: 16px;">
-          <a href="https://mail.google.com" target="_blank" rel="noopener noreferrer" class="provider-btn gmail-btn" style="flex: 1; padding: 10px; border: 1px solid var(--color-border); border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-align: center; background-color: #FFFFFF; display: inline-block;">Abrir Gmail</a>
-          <a href="https://outlook.live.com" target="_blank" rel="noopener noreferrer" class="provider-btn outlook-btn" style="flex: 1; padding: 10px; border: 1px solid var(--color-border); border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-align: center; background-color: #FFFFFF; display: inline-block;">Abrir Outlook</a>
+          <a href="https://mail.google.com" target="_blank" rel="noopener noreferrer" class="provider-btn gmail-btn" style="flex: 1; padding: 10px; border: 1px solid var(--color-border); border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-align: center; background-color: #FFFFFF; display: inline-block;" data-translate="open-gmail">Abrir Gmail</a>
+          <a href="https://outlook.live.com" target="_blank" rel="noopener noreferrer" class="provider-btn outlook-btn" style="flex: 1; padding: 10px; border: 1px solid var(--color-border); border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-align: center; background-color: #FFFFFF; display: inline-block;" data-translate="open-outlook">Abrir Outlook</a>
         </div>
         
         <button class="modal-cta-btn" id="resend-email-btn" disabled style="background-color: var(--color-border); color: var(--color-text-secondary); box-shadow: none; margin-bottom: 12px;">
-          Reenviar e-mail (<span id="resend-countdown">60</span>s)
+          <span data-translate="resend-btn-text">Reenviar e-mail</span> (<span id="resend-countdown">60</span>s)
         </button>
 
-        <button class="text-link-btn" id="email-confirm-ok-btn" style="background: none; border: none; font-size: 0.85rem; color: var(--color-text-secondary); text-decoration: underline; margin-top: 8px;">
+        <button class="text-link-btn" id="email-confirm-ok-btn" style="background: none; border: none; font-size: 0.85rem; color: var(--color-text-secondary); text-decoration: underline; margin-top: 8px;" data-translate="back-home">
           Voltar para o Início
         </button>
       </div>
 
       <!-- VIEW 4: Create Store Profile -->
       <div class="modal-content" id="seller-view-create-store" style="display: none;">
-        <div class="modal-badge">Nova Loja</div>
-        <h2 class="modal-heading">Cadastre seu Brechó</h2>
-        <p class="modal-description">Insira os dados do seu acervo para começar a publicar.</p>
+        <div class="modal-badge" data-translate="create-badge">Nova Loja</div>
+        <h2 class="modal-heading" data-translate="create-heading">Cadastre seu Brechó</h2>
+        <p class="modal-description" data-translate="create-subheading">Insira os dados do seu acervo para começar a publicar.</p>
         
         <form class="auth-form" id="create-store-form">
           <div class="form-group">
-            <label for="store-name">Nome do Brechó</label>
+            <label for="store-name" data-translate="label-store-name">Nome do Brechó</label>
             <input type="text" id="store-name" required placeholder="Ex: Vintage Club">
           </div>
           <div class="form-group">
-            <label for="store-handle">Identificador/Handle (@)</label>
+            <label for="store-handle" data-translate="label-store-handle">Identificador/Handle (@)</label>
             <input type="text" id="store-handle" required placeholder="Ex: @vintage_club">
           </div>
           <div class="form-group">
-            <label for="store-phone">WhatsApp para Vendas (DDD + Número)</label>
+            <label for="store-phone" data-translate="label-store-phone">WhatsApp para Vendas (DDD + Número)</label>
             <input type="text" id="store-phone" required placeholder="Ex: 5592981233982">
           </div>
           <div class="form-group">
-            <label for="store-country">País do Brechó</label>
+            <label for="store-country" data-translate="label-store-country">País do Brechó</label>
             <select id="store-country" required>
               <option value="BR">Brasil (BR) 🇧🇷</option>
               <option value="US">Estados Unidos (US) 🇺🇸</option>
             </select>
           </div>
-          <button type="submit" class="modal-cta-btn">Criar Meu Brechó</button>
+          <button type="submit" class="modal-cta-btn" data-translate="create-btn">Criar Meu Brechó</button>
         </form>
       </div>
+    </div>
+  </div>
+
+  <!-- FLOATING TRANSLATION PROMPT CARD -->
+  <div class="translation-prompt-card" id="translation-prompt-card" style="display: none;">
+    <button class="translation-prompt-close" id="translation-prompt-close" aria-label="Fechar/Close">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+    <div class="translation-prompt-content">
+      <p id="translation-prompt-text" data-translate="translation-prompt-text">Prefer English? Browse our US marketplace.</p>
+      <button class="translation-prompt-btn" id="translation-prompt-btn" data-translate="translation-prompt-btn">Switch to US 🇺🇸</button>
     </div>
   </div>
 
